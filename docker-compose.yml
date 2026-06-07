@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # Servidor do Banco de Dados (MySQL)
+  db:
+    image: mysql:8.0
+    container_name: yourcar_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_secure_password123
+      MYSQL_DATABASE: yourcar_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # Nosso Backend em TypeScript
+  backend:
+    build: .
+    env_file: .env 
+    container_name: yourcar_backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - db
+    environment:
+      - PORT=3000
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASS=root_secure_password123
+      - DB_NAME=yourcar_db
+      - GEMINI_API_KEY=
+
+volumes:
+  mysql_data:
