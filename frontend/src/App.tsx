@@ -15,6 +15,8 @@ function App() {
 
   const [loadingIA, setLoadingIA] = useState(false);
   const [descricaoIA, setDescricaoIA] = useState<string | null>(null);
+  const [imageError, setImageError] = useState(false);
+  const [imagemIA, setImagemIA] = useState<string | null>(null);
 
   useEffect(() => {
     Promise.all([
@@ -50,6 +52,7 @@ function App() {
 
     setLoadingIA(true);
     setDescricaoIA(null);
+    setImageError(false);
 
     try {
       const resposta = await fetch('http://localhost:3000/configurar', {
@@ -70,6 +73,7 @@ function App() {
 
       const dados = await resposta.json();
       setDescricaoIA(dados.descricaoIA);
+      setImagemIA(dados.imagemIA);
     } catch (error) {
       console.error('Erro na chamada:', error);
       alert('Ops! Ocorreu um erro ao processar. Verifique os logs do servidor.');
@@ -211,7 +215,11 @@ function App() {
 
                 {/* A Mágica da Imagem Gratuita Aqui! */}
                 <img 
-                  src={`https://image.pollinations.ai/prompt/Fotografia%20cinematografica%20de%20um%20carro%20${selectedModel?.name}%20na%20cor%20${selectedCor?.name}%20em%20um%20estudio%20escuro%20com%20iluminacao%20neon%20azul%208k%20realista?width=800&height=400&nologo=true`} 
+                  src={(!imagemIA || imagemIA === "fallback" || imageError)
+                    ? `https://loremflickr.com/800/400/car,${selectedModel ? selectedModel.name.split(' ')[0].toLowerCase() : 'luxury'}`
+                    : `data:image/png;base64,${imagemIA}`
+                  } 
+                  onError={() => setImageError(true)}
                   alt="Carro gerado por IA" 
                   className="w-full h-64 object-cover rounded-lg mb-4 shadow-2xl border border-gray-700"
                 />

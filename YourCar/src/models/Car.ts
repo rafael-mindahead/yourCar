@@ -1,10 +1,10 @@
 import {Option} from './Option';
  export class Car {
-    private modelName:string;
-    private basePrice: number;
-    private pneu: Option;
-    private banco: Option;
-    private cor: Option;
+    public readonly modelName: string;
+    public readonly basePrice: number;
+    public readonly pneu: Option;
+    public readonly banco: Option;
+    public readonly cor: Option;
 
     constructor(modelName: string, basePrice: number, pneu: Option, banco: Option, cor: Option) {
         this.modelName = modelName;
